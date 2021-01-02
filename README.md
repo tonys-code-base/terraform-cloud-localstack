@@ -1,2 +1,1 @@
-# terraform-cloud-localstack
-Terraform Cloud using AWS Localstack Instance
+# Terraform Cloud using AWS Localstack Instance
