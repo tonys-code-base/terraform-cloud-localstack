@@ -1,14 +1,14 @@
 # Localhost Tunnelling to Access Localstack from Terraform Cloud
 
-This repo contains sample code for provisioning an S3 bucket on an AWS [Localstack](https://github.com/localstack/localstack) instance from a Terraform Cloud workspace via localhost tunnelling. The instructiions which follow ooutline the requirements for replicating the set up.
+This repo contains sample code for provisioning an S3 bucket on an AWS [Localstack](https://github.com/localstack/localstack) instance from a Terraform Cloud workspace via localhost tunnelling. The instructions which follow outline the requirements for replicating the set up.
 
-Tunnelling is established by using [tunnelto](https://tunnelto.dev/) to expose the Localstack service port to a public URL. 
+Tunnelling is established by using [tunnelto](https://tunnelto.dev/) to expose Localstack on a public URL. 
 
 Refer to the `tunnelto` [official webpage](https://tunnelto.dev/) and [git repo](https://github.com/agrinman/tunnelto) for project details.
 
 ## Expose Localstack via Public URL
 
-Download and install `tunnelto` from either the [official webpage](https://tunnelto.dev/) or [git repo](https://github.com/agrinman/tunnelto), e.g. for installation to target path `/usr/bin/local` on a Linux plaform:
+Download and install `tunnelto` from either the [official webpage](https://tunnelto.dev/) or [git repo](https://github.com/agrinman/tunnelto), e.g. for installation to target path `/usr/bin/local` on a Linux platform:
 
 ```
 $ wget https://github.com/agrinman/tunnelto/releases/download/<VERSION>/tunnelto-linux.tar.gz
@@ -37,9 +37,9 @@ https://uniquelocalstack.tunnelto.dev
 Local Inspect Dashboard: http://localhost:38047
 ```
 
-From the output for our example above, the Localstack public URL (<TUNNEL URL>) is 
+From the output for our example above, the Localstack public URL (`<TUNNEL URL>`) is 
 
-https://uniquelocalstack.tunnelto.dev.
+`https://uniquelocalstack.tunnelto.dev` with corresponding Dashboard address of `http://localhost:38047`.
 
 You should now be able to make requests to the AWS services using the public address. For example, to access using the AWS CLI, specify your public address as the value for option `--endpoint-url`:
 
@@ -57,7 +57,7 @@ $ aws --profile localstack --endpoint-url <TUNNEL URL> s3 ls
 
 ## Configure Terraform AWS Provider
 
-Edit provider details in `main.tf` to use [Localstack as the AWS provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/guides/custom-service-endpoints#localstack) by substituting <TUNNEL URL> with your Localstack public URL
+Edit details in `main.tf` to use [Localstack as the AWS provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/guides/custom-service-endpoints#localstack) by substituting <TUNNEL URL> with your Localstack public URL
 
 - *main.tf*
 
@@ -111,7 +111,7 @@ Now that our Terraform code is configured to use the tunnel, we can go back to T
 ![image-20210102081855237](images/image-20210102081855237.png)
 
 * You will be prompted to authenticate with your Github account in order to access your repositories
-* Once authentication completes, choose the repo which we created, `terraform-cloud-localstack`
+* Once authentication completes, choose the repo `terraform-cloud-localstack`
 * The `workspace name` defaults to `terraform-cloud-localstack`
 * Select `create workspace` to trigger the workspace creation/configuration
 
@@ -128,7 +128,7 @@ Now that our Terraform code is configured to use the tunnel, we can go back to T
 
 ## Verifying Deployment of Plan Components
 
-* To confirm the bucket has been created on our Localstack instance we use either the localhost AWS endpoint URL,
+* To confirm the bucket has been created on the Localstack instance we use either the localhost AWS endpoint URL,
 
 ```
 $ aws --profile localstack --endpoint-url http://localhost:4566 s3 ls
@@ -139,15 +139,14 @@ $ aws --profile localstack --endpoint-url http://localhost:4566 s3 ls
 or by using the public address associated with your tunnel:
 
 ```
-$ aws --profile localstack \
---endpoint-url https://<TUNNEL URL>.tunnelto.dev s3 ls
+$ aws --profile localstack --endpoint-url <TUNNEL URL> s3 ls
 
 2021-01-02 08:36:44 sandpit-sample
 ```
 
-* The  Local Inspector Dashboard, as noted earlier, should show the incoming request from the public address
+* The  Local Inspector Dashboard, as noted earlier, should show the incoming requests from the public address
 
-* Here is the output for my specific instance as it appears at Dashboard URL: `http://localhost:38047`
+* Below is sample output for the example used earlier, as it appears at Dashboard URL: `http://localhost:38047`
 
 ![image-20210102084543998](images/image-20210102084543998.png)
 
