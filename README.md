@@ -150,4 +150,4 @@ $ aws --profile localstack --endpoint-url <TUNNEL URL> s3 ls
 
 ![image-20210102084543998](images/image-20210102084543998.png)
 
-* Subsequent changes to code within the git repository will automatically be reflect in the Cloud workspace
+* Subsequent changes to code within the git repository will automatically be reflected in the Cloud workspace
