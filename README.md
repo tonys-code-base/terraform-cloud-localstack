@@ -1,10 +1,8 @@
 # Localhost Tunnelling to Access Localstack from Terraform Cloud
 
-This repo contains sample code for provisioning an S3 bucket on an AWS [Localstack](https://github.com/localstack/localstack) instance from a Terraform Cloud workspace via localhost tunnelling. The instructions which follow outline the requirements for replicating the set up.
+This repo contains sample code for creating an S3 bucket on AWS [Localstack](https://github.com/localstack/localstack) from a Terraform Cloud workspace. The instructions which follow outline the requirements for replicating the set up.
 
-Tunnelling is established by using [tunnelto](https://tunnelto.dev/) to expose Localstack on a public URL. 
-
-Refer to the `tunnelto` [official webpage](https://tunnelto.dev/) and [git repo](https://github.com/agrinman/tunnelto) for project details.
+Connectivity from a public URL to Localstack is made possible by localhost tunnelling using package [tunnelto](https://tunnelto.dev/). Refer to the `tunnelto` [official webpage](https://tunnelto.dev/) and [git repo](https://github.com/agrinman/tunnelto) for project details.
 
 ## Expose Localstack via Public URL
 
@@ -12,12 +10,12 @@ Download and install `tunnelto` from either the [official webpage](https://tunne
 
 ```
 $ wget https://github.com/agrinman/tunnelto/releases/download/<VERSION>/tunnelto-linux.tar.gz
-
+$ tar -xvf tunnelto-linux.tar.gz
 $ chmod 755 tunnelto
 $ sudo cp tunnelto /usr/local/bin
 ```
 
-Ensure the latest release of [Localstack](https://github.com/localstack/localstack#installing) is running. The latest version enables access to the AWS services via a [single EDGE port (default 4566)](https://github.com/localstack/localstack#configurations) as opposed to older versions where each service was assigned a dedicated port.
+Ensure the latest release of [Localstack](https://github.com/localstack/localstack#installing) is running. Unlike older versions, access to the AWS services is via a [single EDGE port (default 4566)](https://github.com/localstack/localstack#configurations).
 
 The following example establishes a tunnel with subdomain `uniquelocalstack`. When choosing your subdomain name, aim for something meaningful and likely to be unique for your use case. Common or generic names may already be allocated.
 
@@ -37,11 +35,11 @@ https://uniquelocalstack.tunnelto.dev
 Local Inspect Dashboard: http://localhost:38047
 ```
 
-From the output for our example above, the Localstack public URL (`<TUNNEL URL>`) is 
+From the output, the Localstack public URL (`<TUNNEL URL>`) is 
 
 `https://uniquelocalstack.tunnelto.dev` with corresponding Dashboard address of `http://localhost:38047`.
 
-You should now be able to make requests to the AWS services using the public address. For example, to access using the AWS CLI, specify your public address as the value for option `--endpoint-url`:
+You should now be able to send requests to the AWS services using the public address. For example, to access using the AWS CLI, specify your public address as the value for option `--endpoint-url`:
 
 ```
 $ aws --profile localstack --endpoint-url <TUNNEL URL> s3 ls
@@ -57,7 +55,7 @@ $ aws --profile localstack --endpoint-url <TUNNEL URL> s3 ls
 
 ## Configure Terraform AWS Provider
 
-Edit details in `main.tf` to use [Localstack as the AWS provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/guides/custom-service-endpoints#localstack) by substituting <TUNNEL URL> with your Localstack public URL
+Edit details in `main.tf` to use [Localstack as the AWS provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/guides/custom-service-endpoints#localstack) by substituting `<TUNNEL URL>` with your Localstack public URL
 
 - *main.tf*
 
